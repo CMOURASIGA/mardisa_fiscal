@@ -8,7 +8,6 @@ import {
 	Building2,
 	ChevronLeft,
 	ChevronRight,
-	Code,
 	Database,
 	FileDown,
 	FileText,
@@ -19,7 +18,7 @@ import {
 	ShoppingCart,
 	Users,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 interface NavItem {
 	label: string;
@@ -38,16 +37,6 @@ const Sidebar: React.FC = () => {
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const location = useLocation();
 
-	const user = useMemo(() => {
-		try {
-			return JSON.parse(localStorage.getItem("user") || "null");
-		} catch {
-			return null;
-		}
-	}, []);
-
-	const role: string = user?.role || "user";
-	const isAdmin = role === "admin" || role === "admin-local";
 
 	const systemSection: NavSection = {
 		title: "Cadastros e acessos (consulta)",
@@ -81,12 +70,6 @@ const Sidebar: React.FC = () => {
 		],
 	};
 
-	const adminSection: NavSection = {
-		title: "Administração",
-		items: [
-			{ label: "Tabela de Códigos", to: "/private/TableCod", icon: Code },
-		],
-	};
 
 	const navContent = (minimized: boolean) => (
 		<div className="flex flex-col h-full">
@@ -116,13 +99,7 @@ const Sidebar: React.FC = () => {
 						isActive={(path) => location.pathname.includes(path)}
 					/>
 
-					{isAdmin && (
-						<NavGroup
-							section={adminSection}
-							minimized={minimized}
-							isActive={(path) => location.pathname.includes(path)}
-						/>
-					)}
+
 				</div>
 			</nav>
 
