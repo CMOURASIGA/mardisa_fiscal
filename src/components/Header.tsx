@@ -22,9 +22,9 @@ export default function Header() {
   return <header className="sticky top-0 z-30 w-full border-b border-[#e6ebf0] bg-white">
     <div className="flex h-[72px] items-center justify-between gap-4 px-5 lg:px-8">
       <div className="ml-12 flex items-center gap-3 lg:ml-0">
-        <img src="/logo-7c.svg" alt="7C Software" className="h-8 w-8 rounded-lg lg:hidden" />
+        <img src="/logo-7c.svg" alt="7C Consulting" className="h-8 w-8 rounded-lg lg:hidden" />
         <div className="min-w-0">
-          <span className="block text-xs font-bold uppercase tracking-widest text-[#eb5c00]">7C SOFTWARE</span>
+          <span className="block text-xs font-bold uppercase tracking-widest text-[#eb5c00]">7C CONSULTING</span>
           <span className="block text-sm font-semibold text-[#17202a]">Fiscal ST</span>
         </div>
       </div>
