@@ -13,8 +13,10 @@ export function cn(...inputs: ClassValue[]) {
 export function unwrapPaginated<T = unknown>(data: unknown): T[] {
   if (Array.isArray(data)) return data as T[]
   if (data && typeof data === "object") {
-    const results = (data as { results?: unknown }).results
+    const results = (data as { results?: unknown; data?: unknown }).results
     if (Array.isArray(results)) return results as T[]
+    const rows = (data as { data?: unknown }).data
+    if (Array.isArray(rows)) return rows as T[]
   }
   return []
 }
