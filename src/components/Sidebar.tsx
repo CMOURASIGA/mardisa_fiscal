@@ -50,7 +50,7 @@ const Sidebar: React.FC = () => {
 	const isAdmin = role === "admin" || role === "admin-local";
 
 	const systemSection: NavSection = {
-		title: "Cadastros e acessos",
+		title: "Cadastros e acessos (consulta)",
 		items: [
 			{ label: "Usuários", to: "/private/TableUser", icon: Users },
 			{ label: "Empresas", to: "/private/TableEnterprise", icon: Building2 },
@@ -72,9 +72,9 @@ const Sidebar: React.FC = () => {
 			},
 			{ label: "Notas de Venda", to: "/private/TableSale", icon: Receipt },
 			{ label: "Apuração / Relatórios", to: "/private/TableReport", icon: FileText },
-			{ label: "Importar documentos", to: "/private/uploadFile", icon: FileUp },
+			{ label: "Simular importação XML", to: "/private/uploadFile", icon: FileUp },
 			{
-				label: "Gerar arquivos",
+				label: "Exportar simulação",
 				to: "/private/generateFile",
 				icon: FileDown,
 			},
