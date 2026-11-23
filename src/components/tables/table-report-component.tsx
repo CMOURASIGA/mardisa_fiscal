@@ -101,13 +101,15 @@ const ReportTable = () => {
 	const { selectedEnterprise } = useEnterprise();
 
 	const [data, setData] = useState<Row[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
+	const [readError, setReadError] = useState("");
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [expanded, setExpanded] = useState<ExpandedState>({});
 	const [globalFilter, setGlobalFilter] = useState("");
 
 	const fetchData = async (enterpriseId: number) => {
 		setLoading(true);
+		setReadError("");
 
 		try {
 			const response = await api.get(`/fetch-report/${enterpriseId}`);
@@ -117,8 +119,9 @@ const ReportTable = () => {
 				: [];
 
 			setData(fetchedData);
-		} catch {
+		} catch (error: any) {
 			setData([]);
+			setReadError(error?.response?.data?.detail || error?.message || "Consulta indisponível.");
 		} finally {
 			setLoading(false);
 		}
@@ -126,7 +129,9 @@ const ReportTable = () => {
 
 	useEffect(() => {
 		if (selectedEnterprise) {
-			fetchData(selectedEnterprise);
+			void fetchData(selectedEnterprise);
+		} else {
+			setData([]); setReadError(""); setLoading(false);
 		}
 	}, [selectedEnterprise]);
 
@@ -462,6 +467,7 @@ const ReportTable = () => {
 
 	return (
 		<div className="space-y-4">
+			{readError && <div role="alert" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">{readError}</div>}
 			<div>
 				<h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
 					<FileText className="h-6 w-6" />
