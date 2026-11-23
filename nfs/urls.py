@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django import views
+from nfs.local_admin import local_readonly_config
 from django.contrib import admin
 from django.urls import include, path
 
@@ -25,6 +26,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 base_url = 'api/v1/'
 
 urlpatterns = [
+    path("local-admin/readonly-config/", local_readonly_config, name="local_readonly_config"),
     #path('api/v1/', include('api.urls', namespace='api')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/v1/', include('api.urls', namespace='api')),
