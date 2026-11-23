@@ -101,7 +101,8 @@ const Sidebar: React.FC = () => {
 				<EnterpriseSelector minimized={minimized} />
 			</div>
 
-			<nav className="flex-1 overflow-y-auto px-3 py-2">\n                <Link to="/private/home" className={cn("mb-5 flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium", location.pathname.toLowerCase() === "/private/home" ? "bg-[#eb5c00] text-white" : "text-[#bfccd7] hover:bg-[#1b2a36] hover:text-white")}><LayoutDashboard className="h-4 w-4 shrink-0" />{!minimized && <span>Visão geral</span>}</Link>
+			<nav className="flex-1 overflow-y-auto px-3 py-2">
+                <Link to="/private/home" className={cn("mb-5 flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium", location.pathname.toLowerCase() === "/private/home" ? "bg-[#eb5c00] text-white" : "text-[#bfccd7] hover:bg-[#1b2a36] hover:text-white")}><LayoutDashboard className="h-4 w-4 shrink-0" />{!minimized && <span>Visão geral</span>}</Link>
 				<div className="space-y-6">
 					<NavGroup
 						section={systemSection}
