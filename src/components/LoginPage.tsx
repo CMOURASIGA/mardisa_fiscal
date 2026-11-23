@@ -44,7 +44,7 @@ const LoginPage = () => {
     <div className="fiscal-login min-h-screen grid lg:grid-cols-[minmax(0,1.06fr)_minmax(420px,.94fr)]">
       <aside className="fiscal-login-brand hidden lg:flex flex-col justify-between p-12 xl:p-16">
         <div className="flex items-center gap-3">
-          <div className="fiscal-brand-mark" aria-hidden="true">7C<span>.</span></div>
+          <img src="/logo-7c.svg" alt="7C Software" className="h-12 w-12 rounded-xl object-cover" />
           <div><strong className="block text-lg tracking-tight">7C Software</strong><span className="text-sm opacity-70">Soluções fiscais</span></div>
         </div>
         <div className="max-w-xl">
@@ -58,7 +58,7 @@ const LoginPage = () => {
       <main className="flex min-h-screen items-center justify-center bg-[#f6f8fa] p-6 sm:p-10">
         <div className="w-full max-w-[430px]">
           <div className="mb-10 flex lg:hidden items-center gap-3">
-            <span className="fiscal-brand-mark" aria-hidden="true">7C<span>.</span></span>
+            <img src="/logo-7c.svg" alt="7C Software" className="h-12 w-12 rounded-xl object-cover" />
             <strong>7C Software · Fiscal ST</strong>
           </div>
           <div className="mb-8">
