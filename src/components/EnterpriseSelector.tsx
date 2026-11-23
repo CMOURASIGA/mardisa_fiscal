@@ -46,12 +46,12 @@ const EnterpriseSelector: React.FC<Props> = ({ minimized }) => {
       <SelectContent className="max-h-60">
         {error && (
           <div className="px-2 py-1.5 text-sm text-destructive">
-            Erro ao carregar empresas
+            Lista indisponível: backend de demonstração sem acesso fiscal
           </div>
         )}
         {!error && enterprises.length === 0 && (
           <div className="px-2 py-1.5 text-sm text-muted-foreground">
-            Nenhuma empresa encontrada
+            Nenhuma empresa cadastrada neste ambiente
           </div>
         )}
         {enterprises.map((ent) => (
