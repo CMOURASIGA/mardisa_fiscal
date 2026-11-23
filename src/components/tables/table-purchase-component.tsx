@@ -26,18 +26,23 @@ import { useMemo, useState } from "react";
 
 const PurchaseTable = () => {
 	const [data, setData] = useState<any[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
+	const [readError, setReadError] = useState("");
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState("");
 
 	const fetchData = async (enterpriseId: number) => {
 		setLoading(true);
+		setReadError("");
 		try {
 			const response = await api.get(`/fetch-buy/${enterpriseId}`);
 			const fetchedData = Array.isArray(response.data.data)
 				? response.data.data
 				: [];
 			setData(fetchedData);
+		} catch (error: any) {
+			setData([]);
+			setReadError(error?.response?.data?.detail || error?.message || "Consulta indisponível.");
 		} finally {
 			setLoading(false);
 		}
@@ -127,6 +132,7 @@ const PurchaseTable = () => {
 
 	return (
 		<div className="space-y-4">
+			{readError && <div role="alert" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">{readError}</div>}
 			<div>
 				<h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
 					<ShoppingCart className="h-6 w-6" />
