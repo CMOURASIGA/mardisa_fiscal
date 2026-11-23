@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useEnterprise } from "@/context/EnterpriseContext";
 import { requireAuth } from "@/routes/guards";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
-import { ShoppingCart, Receipt, FileText, Upload, Download, RefreshCw, AlertCircle, Building2, Users } from "lucide-react";
+import { ShoppingCart, Receipt, FileText, Upload, Download, RefreshCw, AlertCircle, Building2 } from "lucide-react";
 
 export const Route = createFileRoute("/private/home")({
   beforeLoad: requireAuth,
@@ -22,7 +22,6 @@ function Dashboard() {
     try { return JSON.parse(localStorage.getItem("user") || "null"); }
     catch { return null; }
   })();
-  const isAdmin = user?.role === "admin" || user?.role === "admin-local";
   const name = user?.first_name || user?.username || "usuário";
   const stats = [
     { title: "Notas de compra", value: counts.compras, icon: ShoppingCart, href: "/private/TablePurchase" },
@@ -91,15 +90,6 @@ function Dashboard() {
         </Card>
       </div>
 
-      {isAdmin && (
-        <Card>
-          <CardHeader><CardTitle className="text-base">Administração</CardTitle></CardHeader>
-          <CardContent className="flex flex-wrap gap-3">
-            <Button asChild variant="outline"><Link to="/private/TableUser"><Users className="mr-2 h-4 w-4" /> Usuários</Link></Button>
-            <Button asChild variant="outline"><Link to="/private/TableEnterprise"><Building2 className="mr-2 h-4 w-4" /> Empresas</Link></Button>
-          </CardContent>
-        </Card>
-      )}
       <p className="text-xs text-muted-foreground">Sem dados fictícios: os indicadores fiscais serão exibidos após habilitar a integração de leitura autorizada com o backend existente.</p>
     </div>
   );
