@@ -46,7 +46,7 @@ function Dashboard() {
       {!selectedEnterprise && (
         <div role="status" className="rounded-xl border border-border bg-muted/50 p-5">
           <div className="flex items-center gap-2 font-semibold"><Building2 className="h-5 w-5" /> Selecione uma empresa</div>
-          <p className="mt-2 text-sm text-muted-foreground">Use o seletor do menu lateral para consultar os dados reais dessa empresa.</p>
+          <p className="mt-2 text-sm text-muted-foreground">A conexão local de homologação não contém os cadastros da Mardisa e bloqueia consultas fiscais. A lista real exige configuração de acesso autorizado somente leitura.</p>
         </div>
       )}
       {status === "error" && (
@@ -76,17 +76,17 @@ function Dashboard() {
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
-          <CardHeader><CardTitle className="text-base">Importar XML fiscal</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base">Simular importação de XML</CardTitle></CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">Importe documentos de compra e venda na empresa selecionada.</p>
-            <Button asChild className="w-full"><Link to="/private/uploadFile"><Upload className="mr-2 h-4 w-4" /> Importar arquivos</Link></Button>
+            <p className="text-sm text-muted-foreground">Analise arquivos de compra e venda no navegador, sem gravar no banco.</p>
+            <Button asChild className="w-full"><Link to="/private/uploadFile"><Upload className="mr-2 h-4 w-4" /> Simular importação</Link></Button>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle className="text-base">Gerar arquivos fiscais</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base">Exportar simulação local</CardTitle></CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">Gere os arquivos disponibilizados pelas rotinas atuais do backend.</p>
-            <Button asChild variant="outline" className="w-full"><Link to="/private/generateFile"><Download className="mr-2 h-4 w-4" /> Gerar arquivos</Link></Button>
+            <p className="text-sm text-muted-foreground">Baixe um resumo JSON da simulação local. Não é um arquivo fiscal oficial.</p>
+            <Button asChild variant="outline" className="w-full"><Link to="/private/generateFile"><Download className="mr-2 h-4 w-4" /> Exportar resumo local</Link></Button>
           </CardContent>
         </Card>
       </div>
@@ -100,7 +100,7 @@ function Dashboard() {
           </CardContent>
         </Card>
       )}
-      <p className="text-xs text-muted-foreground">Indicadores de arquivos processados e tendências mensais serão exibidos somente após a disponibilização de dados verificáveis no backend.</p>
+      <p className="text-xs text-muted-foreground">Sem dados fictícios: os indicadores fiscais serão exibidos após habilitar a integração de leitura autorizada com o backend existente.</p>
     </div>
   );
 }
