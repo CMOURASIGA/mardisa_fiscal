@@ -8,3 +8,5 @@ demo_auth.sqlite3
 demo_auth.sqlite3-*
 
 .fiscal_readonly.local.env
+
+.fiscal_tenants.local.json
