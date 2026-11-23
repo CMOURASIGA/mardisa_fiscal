@@ -17,11 +17,20 @@ export const useEnterpriseList = () => {
   const [enterprises, setEnterprises] = useState<Enterprise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const refresh = () => setRefreshKey(key => key + 1);
+    window.addEventListener("fiscal-enterprises-updated", refresh);
+    return () => window.removeEventListener("fiscal-enterprises-updated", refresh);
+  }, []);
 
   useEffect(() => {
     let active = true;
 
     const fetchEnterprises = async () => {
+      setLoading(true);
+      setError(false);
       try {
         const res = await api.get<unknown>("/enterprises");
         if (active) setEnterprises(unwrapPaginated<Enterprise>(res.data));
@@ -36,7 +45,7 @@ export const useEnterpriseList = () => {
     return () => {
       active = false;
     };
-  }, []);
+  }, [refreshKey]);
 
   return { enterprises, loading, error };
 };
