@@ -65,7 +65,11 @@ def _probe(data):
             grants = [str(row[0]) for row in cursor.fetchall()]
             # Uma conta com privilégios de escrita não é aceita, ainda que
             # esta chamada faça apenas leituras.
-            unsafe = any(re.search(r"\b(ALL PRIVILEGES|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|INDEX|TRIGGER|GRANT OPTION|EXECUTE|EVENT|REFERENCES)\b", grant, re.I) for grant in grants)
+            unsafe = any(
+                not re.match(r"^GRANT (?:USAGE|SELECT(?:, SHOW VIEW)?|SHOW VIEW(?:, SELECT)?) ON .+ TO .+$", grant, re.I)
+                or " WITH " in grant.upper()
+                for grant in grants
+            )
             if unsafe:
                 return {"ok": False, "message": "Credencial rejeitada: foram detectados privilégios incompatíveis com somente leitura."}
             return {"ok": True, "message": "Conexão MySQL e consulta SELECT confirmadas.", "database": actual_db, "user": actual_user}
