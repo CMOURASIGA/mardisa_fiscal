@@ -9,6 +9,7 @@ import {
 	ChevronLeft,
 	ChevronRight,
 	Database,
+	Settings2,
 	FileDown,
 	FileText,
 	FileUp,
@@ -36,6 +37,8 @@ const Sidebar: React.FC = () => {
 	const [isMinimized, setIsMinimized] = useState(false);
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const location = useLocation();
+	let admin = false;
+	try { const u = JSON.parse(localStorage.getItem("user") || "null"); admin = ["admin", "admin-local"].includes(u?.role); } catch { /* sessão inválida */ }
 
 
 	const systemSection: NavSection = {
@@ -99,7 +102,7 @@ const Sidebar: React.FC = () => {
 						isActive={(path) => location.pathname.includes(path)}
 					/>
 
-
+					{admin && <div className="mt-6"><NavGroup section={{ title: "Administração técnica", items: [{ label: "Conexão de leitura", to: "/private/connectionSettings", icon: Settings2 }] }} minimized={minimized} isActive={(path) => location.pathname.toLowerCase() === path.toLowerCase()} /></div>}
 				</div>
 			</nav>
 
