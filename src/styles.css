@@ -136,3 +136,47 @@ code {
     @apply bg-background text-foreground;
   }
 }
+
+/* Identidade Fiscal ST, referenciada ao protótipo oficial 7C Software */
+:root {
+  --background: #f6f8fa;
+  --foreground: #17202a;
+  --card: #ffffff;
+  --card-foreground: #17202a;
+  --popover: #ffffff;
+  --popover-foreground: #17202a;
+  --primary: #eb5c00;
+  --primary-foreground: #ffffff;
+  --secondary: #fff0e5;
+  --secondary-foreground: #91400d;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #fff0e5;
+  --accent-foreground: #9a3b00;
+  --border: #e6ebf0;
+  --input: #d8e0e8;
+  --ring: #eb5c00;
+  --sidebar: #121c25;
+  --sidebar-foreground: #eaf0f6;
+  --sidebar-primary: #eb5c00;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1b2a36;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #293642;
+}
+.fiscal-login-brand {
+  color: #fff;
+  background: radial-gradient(ellipse at 10% 90%, #22313f 0%, transparent 45%), #121c25;
+}
+.fiscal-brand-mark {
+  display: grid; place-items: center; border-radius: 11px;
+  width: 49px; height: 49px; flex: 0 0 auto;
+  background: linear-gradient(140deg, #ff7900, #e24d00);
+  color: white; font-size: 22px; font-weight: 900; letter-spacing: -0.1em;
+}
+.fiscal-brand-mark span { color: #fff; margin-left: 1px; }
+.fiscal-kicker {
+  display: inline-flex; align-items: center; padding: 9px 13px;
+  border: 1px solid #7c411f; border-radius: 999px;
+  color: #ff994d; font-size: 11px; font-weight: 800; letter-spacing: .15em;
+}
