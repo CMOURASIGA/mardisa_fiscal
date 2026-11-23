@@ -17,6 +17,10 @@ api.interceptors.request.use(config => {
       safePath = "/local-data/enterprises/";
     } else if (/^\/enterprises\/\d+$/.test(path)) {
       safePath = `/local-data/enterprises/${path.split("/")[2]}/`;
+    } else if (path === "/user" || path === "/userenterprise") {
+      safePath = "/local-data/metadata/users/";
+    } else if (path === "/databases" || /^\/fetch-db\/\d+$/.test(path)) {
+      safePath = "/local-data/metadata/databases/";
     } else {
       const match = path.match(/^\/fetch-(buy|sale|report)\/(\d+)$/);
       if (match) safePath = `/local-data/fiscal/${match[2]}/${match[1]}/`;
