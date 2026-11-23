@@ -10,7 +10,7 @@ type Result = {
   name: string; valid: boolean; detail: string;
   number?: string; issuer?: string; amount?: string;
 };
-type Simulation = { enterpriseId: number; type: InvoiceType; at: string; results: Result[] };
+type Simulation = { enterpriseId: number | null; type: InvoiceType; at: string; results: Result[] };
 const storageKey = "fiscal-st:simulacao-v1";
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_FILES = 100;
@@ -66,7 +66,6 @@ export default function FileUploadPage() {
   }
 
   async function simulate() {
-    if (!enterpriseId) return setMessage("Selecione uma empresa para associar os resultados locais.");
     if (!files.length) return setMessage("Selecione pelo menos um XML.");
     setProcessing(true); setMessage("");
     try {
@@ -103,6 +102,7 @@ export default function FileUploadPage() {
       <CardHeader><CardTitle>Documentos para análise</CardTitle></CardHeader>
       <CardContent className="space-y-5">
         <EnterpriseBanner enterprise={enterprise} loading={loading} />
+        {!enterpriseId && <p className="rounded-lg bg-[#f1f5f9] p-3 text-sm text-[#475569]">Sem empresa selecionada. Você pode simular um XML localmente, mas esse resultado não será associado a uma empresa oficial.</p>}
         <div className="flex gap-2">
           <Button type="button" variant={kind === "compra" ? "default" : "outline"} onClick={() => setKind("compra")}>Compra</Button>
           <Button type="button" variant={kind === "venda" ? "default" : "outline"} onClick={() => setKind("venda")}>Venda</Button>
@@ -114,7 +114,7 @@ export default function FileUploadPage() {
           <input ref={fileInput} type="file" accept=".xml,application/xml,text/xml" multiple className="hidden" onChange={e => { addFiles(e.target.files); e.target.value = ""; }} />
         </div>
         {files.length > 0 && <p className="text-sm">{files.length} arquivo(s) selecionado(s).</p>}
-        <Button className="w-full" type="button" onClick={simulate} disabled={processing || !enterpriseId || files.length === 0}>{processing ? "Analisando localmente..." : "Executar simulação local"}</Button>
+        <Button className="w-full" type="button" onClick={simulate} disabled={processing || files.length === 0}>{processing ? "Analisando localmente..." : "Executar simulação local"}</Button>
         {message && <p role="alert" className="flex items-center gap-2 text-sm text-destructive"><AlertCircle className="h-4 w-4" /> {message}</p>}
       </CardContent>
     </Card>
