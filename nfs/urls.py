@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django import views
 from nfs.local_admin import local_readonly_config
-from nfs.readonly_data import enterprise_list, enterprise_detail, tenant_config, fiscal_data
+from nfs.readonly_data import enterprise_list, enterprise_detail, tenant_config, fiscal_data, metadata_list
 from django.contrib import admin
 from django.urls import include, path
 
@@ -29,6 +29,7 @@ base_url = 'api/v1/'
 urlpatterns = [
     path("local-admin/readonly-config/", local_readonly_config, name="local_readonly_config"),
     path("local-data/enterprises/", enterprise_list, name="local_enterprises"),
+    path("local-data/metadata/<str:kind>/", metadata_list, name="local_metadata_list"),
     path("local-data/enterprises/<int:enterprise_id>/", enterprise_detail, name="local_enterprise_detail"),
     path("local-admin/tenant/<int:enterprise_id>/", tenant_config, name="local_tenant_config"),
     path("local-data/fiscal/<int:enterprise_id>/<str:kind>/", fiscal_data, name="local_fiscal_data"),
