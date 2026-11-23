@@ -50,7 +50,7 @@ const Sidebar: React.FC = () => {
 	const isAdmin = role === "admin" || role === "admin-local";
 
 	const systemSection: NavSection = {
-		title: "Sistema",
+		title: "Cadastros e acessos",
 		items: [
 			{ label: "Usuários", to: "/private/TableUser", icon: Users },
 			{ label: "Empresas", to: "/private/TableEnterprise", icon: Building2 },
@@ -63,7 +63,7 @@ const Sidebar: React.FC = () => {
 	};
 
 	const documentsSection: NavSection = {
-		title: "Notas e Arquivos",
+		title: "Processamento fiscal",
 		items: [
 			{
 				label: "Notas de Compra",
@@ -71,10 +71,10 @@ const Sidebar: React.FC = () => {
 				icon: ShoppingCart,
 			},
 			{ label: "Notas de Venda", to: "/private/TableSale", icon: Receipt },
-			{ label: "Relatórios", to: "/private/TableReport", icon: FileText },
-			{ label: "Upload de Arquivo", to: "/private/uploadFile", icon: FileUp },
+			{ label: "Apuração / Relatórios", to: "/private/TableReport", icon: FileText },
+			{ label: "Importar documentos", to: "/private/uploadFile", icon: FileUp },
 			{
-				label: "Geração de Arquivo",
+				label: "Gerar arquivos",
 				to: "/private/generateFile",
 				icon: FileDown,
 			},
@@ -92,21 +92,21 @@ const Sidebar: React.FC = () => {
 		<div className="flex flex-col h-full">
 			<div className="flex items-center justify-between p-4 border-b border-[#293642]">
 				{!minimized && (
-					<span className="text-lg font-semibold text-white">Fiscal ST</span>
+					<div className="flex items-center gap-3"><img src="/logo-7c.svg" alt="7C Software" className="h-9 w-9 rounded-lg" /><div><span className="block text-sm font-semibold text-white">Fiscal ST</span><span className="block text-[11px] text-[#93a2b2]">7C Software</span></div></div>
 				)}
-				{minimized && <LayoutDashboard className="h-5 w-5 mx-auto" />}
+				{minimized && <img src="/logo-7c.svg" alt="7C Software" className="mx-auto h-9 w-9 rounded-lg" />}
 			</div>
 
 			<div className="px-3 pb-4">
 				<EnterpriseSelector minimized={minimized} />
 			</div>
 
-			<nav className="flex-1 overflow-y-auto px-3 py-2">
+			<nav className="flex-1 overflow-y-auto px-3 py-2">\n                <Link to="/private/home" className={cn("mb-5 flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium", location.pathname.toLowerCase() === "/private/home" ? "bg-[#eb5c00] text-white" : "text-[#bfccd7] hover:bg-[#1b2a36] hover:text-white")}><LayoutDashboard className="h-4 w-4 shrink-0" />{!minimized && <span>Visão geral</span>}</Link>
 				<div className="space-y-6">
 					<NavGroup
 						section={systemSection}
 						minimized={minimized}
-						isActive={(path) => location.pathname.includes(path)}
+						isActive={(path) => location.pathname.toLowerCase() === path.toLowerCase()}
 					/>
 
 					<NavGroup
@@ -137,7 +137,7 @@ const Sidebar: React.FC = () => {
 					) : (
 						<ChevronLeft className="h-4 w-4" />
 					)}
-					{!minimized && <span className="ml-2">Recolher</span>}
+					{!minimized && <span className="ml-2 text-[#bfccd7]">Recolher</span>}
 				</Button>
 			</div>
 		</div>
@@ -151,7 +151,7 @@ const Sidebar: React.FC = () => {
 						<Menu className="h-4 w-4" />
 					</Button>
 				</SheetTrigger>
-				<SheetContent side="left" className="w-72 p-0">
+				<SheetContent side="left" className="w-72 bg-[#121c25] p-0 text-white">
 					{navContent(false)}
 				</SheetContent>
 			</Sheet>
