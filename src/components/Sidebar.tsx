@@ -78,9 +78,9 @@ const Sidebar: React.FC = () => {
 		<div className="flex flex-col h-full">
 			<div className="flex items-center justify-between p-4 border-b border-[#293642]">
 				{!minimized && (
-					<div className="flex items-center gap-3"><img src="/logo-7c.svg" alt="7C Software" className="h-9 w-9 rounded-lg" /><div><span className="block text-sm font-semibold text-white">Fiscal ST</span><span className="block text-[11px] text-[#93a2b2]">7C Software</span></div></div>
+					<div className="flex items-center gap-3"><img src="/logo-7c.svg" alt="7C Consulting" className="h-9 w-9 rounded-lg" /><div><span className="block text-sm font-semibold text-white">Fiscal ST</span><span className="block text-[11px] text-[#93a2b2]">7C Consulting</span></div></div>
 				)}
-				{minimized && <img src="/logo-7c.svg" alt="7C Software" className="mx-auto h-9 w-9 rounded-lg" />}
+				{minimized && <img src="/logo-7c.svg" alt="7C Consulting" className="mx-auto h-9 w-9 rounded-lg" />}
 			</div>
 
 			<div className="px-3 pb-4">
