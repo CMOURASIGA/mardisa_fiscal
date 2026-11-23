@@ -6,9 +6,10 @@ Os endpoints fiscais externos devem ser usados apenas após auditoria de
 leitura e configuração de credenciais read-only; neste modo são bloqueados.
 """
 from .settings import *  # noqa: F401,F403
-from .settings import BASE_DIR
+from .settings import BASE_DIR, MIDDLEWARE as BASE_MIDDLEWARE
 
 DEBUG = True
+MIDDLEWARE = ["nfs.demo_middleware.DemoIsolationMiddleware", *BASE_MIDDLEWARE]
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 DATABASES = {
     "default": {
