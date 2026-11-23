@@ -1,256 +1,64 @@
 import { useState } from "react";
-import { toast } from "sonner";
-import { FileDown, Loader2 } from "lucide-react";
+import { Download, FileDown, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import EnterpriseBanner from "@/components/EnterpriseBanner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSelectedEnterprise } from "@/hooks/useSelectedEnterprise";
-import { downloadBlob } from "@/lib/utils";
-import api from "@/services/api";
+import EnterpriseBanner from "@/components/EnterpriseBanner";
 
-type GenerateOption = "Produto" | "Pedido";
+type LocalSimulation = {
+  enterpriseId: number;
+  type: "compra" | "venda";
+  at: string;
+  results: Array<{ name: string; valid: boolean; detail: string; number?: string; issuer?: string; amount?: string }>;
+};
+const key = "fiscal-st:simulacao-v1";
 
-const MESES = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
-];
-
-const CURRENT_YEAR = new Date().getFullYear();
-const MIN_YEAR = 2000;
-const MAX_YEAR = CURRENT_YEAR + 1;
-
-/** Erros de download chegam como Blob (responseType: "blob") — extrai o JSON. */
-const readErrorMessage = async (error: any, fallback: string) => {
-  try {
-    const data = error?.response?.data;
-    if (data instanceof Blob) {
-      const json = JSON.parse(await data.text());
-      return json.error || json.message || fallback;
+export default function FileDownloadPage() {
+  const { enterpriseId, enterprise, loading } = useSelectedEnterprise();
+  const [message, setMessage] = useState("");
+  function downloadLocalSummary() {
+    setMessage("");
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) throw new Error("Não há simulação local salva. Execute primeiro uma análise XML.");
+      const payload = JSON.parse(raw) as LocalSimulation;
+      if (payload.enterpriseId !== enterpriseId) throw new Error("A simulação pertence a outra empresa. Selecione a empresa correspondente.");
+      // Este relatório descreve somente o resultado do navegador. Não é documento fiscal válido.
+      const report = {
+        titulo: "Fiscal ST | Resultado da simulação local",
+        origem: "localStorage - não é apuração fiscal nem exportação oficial",
+        empresa: enterprise?.razao_social || "",
+        ...payload,
+      };
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "fiscal-st-simulacao-local.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setMessage("Relatório local baixado. Nenhum processamento foi solicitado ao backend.");
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : "Não foi possível exportar o resumo local.");
     }
-    if (data?.error) return data.error;
-    if (data?.message) return data.message;
-    if (error?.response?.status === 401)
-      return "Sessão expirada. Faça login novamente.";
-    return fallback;
-  } catch {
-    return fallback;
   }
-};
-
-const FileDownloadPage = () => {
-  const { enterpriseId, enterprise, loading: loadingEnterprise } =
-    useSelectedEnterprise();
-
-  const [selectedOption, setSelectedOption] = useState<GenerateOption | null>(
-    null
-  );
-  const [month, setMonth] = useState<number | "">("");
-  const [year, setYear] = useState<number | "">("");
-  const [generating, setGenerating] = useState<"produto" | "pedido" | null>(
-    null
-  );
-  const [error, setError] = useState<string | null>(null);
-
-  const fail = (msg: string) => {
-    setError(msg);
-    toast.error(msg);
-  };
-
-  const generateProdutoFile = async () => {
-    if (!enterpriseId)
-      return fail("Selecione uma empresa antes de gerar o arquivo.");
-
-    setGenerating("produto");
-    setError(null);
-    try {
-      const response = await api.get(`/download/bulk_v1/${enterpriseId}`, {
-        responseType: "blob",
-      });
-      downloadBlob(response.data, "produto_file.zip");
-      toast.success("Arquivo gerado com sucesso!");
-    } catch (err: any) {
-      console.error(err);
-      fail(
-        await readErrorMessage(
-          err,
-          "Erro ao gerar arquivo. Verifique se existem notas."
-        )
-      );
-    } finally {
-      setGenerating(null);
-    }
-  };
-
-  const generatePedidoFile = async () => {
-    if (!enterpriseId)
-      return fail("Selecione uma empresa antes de gerar o arquivo.");
-    if (month === "" || year === "")
-      return fail("Selecione o mês e o ano.");
-
-    setGenerating("pedido");
-    setError(null);
-    try {
-      const response = await api.get(
-        `/download/bulk_v2/${enterpriseId}?month=${month}&year=${year}`,
-        { responseType: "blob" }
-      );
-      downloadBlob(response.data, `pedido_${month}_${year}.zip`);
-      toast.success("Arquivo gerado com sucesso!");
-    } catch (err: any) {
-      console.error(err);
-      fail(await readErrorMessage(err, "Erro ao gerar arquivo de pedido."));
-    } finally {
-      setGenerating(null);
-    }
-  };
-
-  const isPedidoFormValid =
-    month !== "" &&
-    year !== "" &&
-    month >= 1 &&
-    month <= 12 &&
-    year >= MIN_YEAR &&
-    year <= MAX_YEAR;
-
-  return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight">
-          <FileDown className="h-6 w-6" />
-          Geração de Arquivo
-        </h1>
-        <p className="text-muted-foreground">
-          Gere os arquivos de produto e pedido
-        </p>
-      </div>
-
-      <Card className="max-w-lg">
-        <CardHeader>
-          <CardTitle>Escolha o tipo de arquivo a gerar</CardTitle>
-          <CardDescription>
-            Selecione Produto ou Pedido e informe os dados
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
-          <EnterpriseBanner enterprise={enterprise} loading={loadingEnterprise} />
-
-          <Tabs
-            value={selectedOption ?? ""}
-            onValueChange={(value) => {
-              setSelectedOption(value as GenerateOption);
-              setError(null);
-            }}
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="Produto">Produto</TabsTrigger>
-              <TabsTrigger value="Pedido">Pedido</TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {selectedOption === "Produto" && (
-            <Button
-              className="w-full"
-              onClick={generateProdutoFile}
-              disabled={generating !== null}
-            >
-              {generating === "produto" && (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              )}
-              Gerar Arquivo Produto
-            </Button>
-          )}
-
-          {selectedOption === "Pedido" && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="month">Mês</Label>
-                  <Select
-                    value={month !== "" ? String(month) : undefined}
-                    onValueChange={(value) => setMonth(Number(value))}
-                  >
-                    <SelectTrigger id="month" className="w-full">
-                      <SelectValue placeholder="Mês" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {MESES.map((nome, i) => (
-                        <SelectItem key={nome} value={String(i + 1)}>
-                          {nome}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="year">Ano</Label>
-                  <Input
-                    id="year"
-                    type="number"
-                    inputMode="numeric"
-                    min={MIN_YEAR}
-                    max={MAX_YEAR}
-                    placeholder="Ex.: 2025"
-                    value={year}
-                    onChange={(e) =>
-                      setYear(e.target.value === "" ? "" : Number(e.target.value))
-                    }
-                  />
-                </div>
-              </div>
-
-              <Button
-                className="w-full"
-                onClick={generatePedidoFile}
-                disabled={!isPedidoFormValid || generating !== null}
-              >
-                {generating === "pedido" && (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                )}
-                Gerar Arquivo Pedido
-              </Button>
-            </div>
-          )}
-        </CardContent>
-
-        {error && (
-          <CardFooter>
-            <p role="alert" className="w-full text-center text-sm text-destructive">
-              {error}
-            </p>
-          </CardFooter>
-        )}
-      </Card>
+  return <div className="space-y-6">
+    <div><p className="text-sm font-semibold text-primary">Fiscal ST / Demonstração operacional</p>
+      <h1 className="mt-2 flex items-center gap-3 text-3xl font-bold"><FileDown className="h-7 w-7 text-primary" /> Exportação de resultados</h1>
+      <p className="mt-2 text-muted-foreground">Conheça o fluxo de exportação sem acionar rotinas fiscais do backend.</p>
     </div>
-  );
-};
-
-export default FileDownloadPage;
+    <div className="rounded-xl border border-[#eb5c00]/30 bg-[#fff4eb] p-5 text-sm text-[#813600]">
+      <p className="flex items-center gap-2 font-bold"><ShieldCheck className="h-5 w-5" /> MODO DEMONSTRAÇÃO, SEM ESCRITA</p>
+      <p className="mt-2">Por segurança, as rotinas originais de geração de ZIP/XML permanecem desativadas nesta interface até que seus efeitos sejam auditados. O arquivo abaixo é um resumo JSON da simulação armazenada no seu navegador, não um documento fiscal oficial.</p>
+    </div>
+    <Card><CardHeader><CardTitle>Resumo da simulação local</CardTitle></CardHeader>
+      <CardContent className="space-y-4">
+        <EnterpriseBanner enterprise={enterprise} loading={loading} />
+        <p className="text-sm text-muted-foreground">Exporte os dados básicos da análise XML executada no navegador para apresentar à equipe técnica.</p>
+        <Button onClick={downloadLocalSummary} disabled={!enterpriseId}><Download className="mr-2 h-4 w-4" /> Baixar resumo local (JSON)</Button>
+        {message && <p role="status" className="text-sm text-muted-foreground">{message}</p>}
+      </CardContent></Card>
+  </div>;
+}
