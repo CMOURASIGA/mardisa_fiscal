@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction, type FormEvent } from "react";
 import { requireAdmin } from "@/routes/guards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -78,7 +78,7 @@ function Page() {
     }).catch(e=>{if(active)setError(e.message);});
     return ()=>{active=false;};
   }, [selected]);
-  const change = (setter: React.Dispatch<React.SetStateAction<Fields>>) => (field: keyof Fields, val:string) => setter(prev=>({...prev,[field]:val}));
+  const change = (setter: Dispatch<SetStateAction<Fields>>) => (field: keyof Fields, val:string) => setter(prev=>({...prev,[field]:val}));
   async function save(event:FormEvent, type:"meta"|"fiscal") {
     event.preventDefault();setBusy(true);setResult("");setError("");
     try {
