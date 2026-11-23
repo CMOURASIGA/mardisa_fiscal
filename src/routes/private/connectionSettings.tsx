@@ -55,6 +55,7 @@ function Page() {
     try {
       const data = await request("/local-data/enterprises/");
       setCompanies(Array.isArray(data.data)? data.data : []);
+      window.dispatchEvent(new Event("fiscal-enterprises-updated"));
     } catch(e) { setError(e instanceof Error ? e.message : "Falha na consulta."); }
     finally { setLoadingCompanies(false); }
   };
