@@ -90,9 +90,9 @@ const Sidebar: React.FC = () => {
 
 	const navContent = (minimized: boolean) => (
 		<div className="flex flex-col h-full">
-			<div className="flex items-center justify-between p-4 border-b">
+			<div className="flex items-center justify-between p-4 border-b border-[#293642]">
 				{!minimized && (
-					<span className="text-lg font-semibold text-foreground">Mardisa</span>
+					<span className="text-lg font-semibold text-white">Fiscal ST</span>
 				)}
 				{minimized && <LayoutDashboard className="h-5 w-5 mx-auto" />}
 			</div>
@@ -125,7 +125,7 @@ const Sidebar: React.FC = () => {
 				</div>
 			</nav>
 
-			<div className="p-4 border-t">
+			<div className="p-4 border-t border-[#293642]">
 				<Button
 					variant="ghost"
 					size="sm"
@@ -158,7 +158,7 @@ const Sidebar: React.FC = () => {
 
 			<aside
 				className={cn(
-					"hidden lg:flex flex-col h-screen bg-card border-r transition-all duration-300",
+					"hidden lg:flex flex-col h-screen bg-[#121c25] text-[#eaf0f6] border-r border-[#293642] transition-all duration-300",
 					isMinimized ? "w-16" : "w-64",
 				)}
 			>
@@ -182,7 +182,7 @@ const NavGroup: React.FC<NavGroupProps> = ({
 	return (
 		<div>
 			{!minimized && (
-				<h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-3">
+				<h3 className="text-xs font-semibold text-[#8c9bab] uppercase tracking-wider mb-2 px-3">
 					{section.title}
 				</h3>
 			)}
@@ -199,7 +199,7 @@ const NavGroup: React.FC<NavGroupProps> = ({
 								"flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
 								active
 									? "bg-primary text-primary-foreground"
-									: "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+									: "text-[#bfccd7] hover:bg-[#1b2a36] hover:text-white",
 							)}
 						>
 							<Icon className={cn("h-4 w-4", minimized && "mx-auto")} />
