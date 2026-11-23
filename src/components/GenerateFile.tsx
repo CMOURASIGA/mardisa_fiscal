@@ -6,7 +6,7 @@ import { useSelectedEnterprise } from "@/hooks/useSelectedEnterprise";
 import EnterpriseBanner from "@/components/EnterpriseBanner";
 
 type LocalSimulation = {
-  enterpriseId: number;
+  enterpriseId: number | null;
   type: "compra" | "venda";
   at: string;
   results: Array<{ name: string; valid: boolean; detail: string; number?: string; issuer?: string; amount?: string }>;
@@ -22,7 +22,7 @@ export default function FileDownloadPage() {
       const raw = localStorage.getItem(key);
       if (!raw) throw new Error("Não há simulação local salva. Execute primeiro uma análise XML.");
       const payload = JSON.parse(raw) as LocalSimulation;
-      if (payload.enterpriseId !== enterpriseId) throw new Error("A simulação pertence a outra empresa. Selecione a empresa correspondente.");
+      if (payload.enterpriseId !== enterpriseId) throw new Error("A simulação pertence a outro contexto de empresa. Faça a análise novamente.");
       // Este relatório descreve somente o resultado do navegador. Não é documento fiscal válido.
       const report = {
         titulo: "Fiscal ST | Resultado da simulação local",
@@ -57,7 +57,7 @@ export default function FileDownloadPage() {
       <CardContent className="space-y-4">
         <EnterpriseBanner enterprise={enterprise} loading={loading} />
         <p className="text-sm text-muted-foreground">Exporte os dados básicos da análise XML executada no navegador para apresentar à equipe técnica.</p>
-        <Button onClick={downloadLocalSummary} disabled={!enterpriseId}><Download className="mr-2 h-4 w-4" /> Baixar resumo local (JSON)</Button>
+        <Button onClick={downloadLocalSummary} ><Download className="mr-2 h-4 w-4" /> Baixar resumo local (JSON)</Button>
         {message && <p role="status" className="text-sm text-muted-foreground">{message}</p>}
       </CardContent></Card>
   </div>;
