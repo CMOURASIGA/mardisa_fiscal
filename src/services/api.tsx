@@ -1,30 +1,37 @@
 import axios from "axios";
 
 /**
- * Fiscal ST - modo consulta.
- * A camada de UI não pode chamar operações que escrevam no banco oficial.
- * IMPORTANTE: proteção de frontend não substitui autorização/usuário read-only no backend.
+ * Fiscal ST: somente chamadas GET para a API local, isolada e autenticada.
+ * Nunca chamar endpoints fiscais legados: incluem operações que escrevem no banco.
  */
-const api = axios.create({ baseURL: import.meta.env.VITE_API_URL });
+const base = (import.meta.env.VITE_API_URL_LOGIN || import.meta.env.VITE_API_URL || "http://127.0.0.1:8000")
+  .replace(/\/$/, "").replace(/\/api\/v1$/, "");
+const api = axios.create({ baseURL: base });
 
-const READ_ENDPOINTS = [
-  /^\/fetch-(buy|sale|report|db|code|user)(\/\d+)?\/?$/,
-  /^\/enterprises(\/\d+)?\/?$/,
-  /^\/enterprises\/user\/?$/,
-  /^\/user(\/\d+)?\/?$/,
-  /^\/userenterprise(\/\d+)?\/?$/,
-  /^\/groups(\/\d+)?\/?$/,
-  /^\/databases(\/\d+)?\/?$/,
-];
-
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(config => {
   const method = (config.method || "get").toLowerCase();
-  const pathname = (config.url || "").split("?")[0];
-  if (method !== "get" || !READ_ENDPOINTS.some((pattern) => pattern.test(pathname))) {
-    return Promise.reject(new Error("Operação indisponível nesta demonstração. Apenas consultas autorizadas ao backend são permitidas; importações são locais."));
+  const path = (config.url || "").split("?")[0].replace(/\/$/, "");
+  let safePath: string | null = null;
+  if (method === "get") {
+    if (path === "/enterprises" || path === "/enterprises/user") {
+      safePath = "/local-data/enterprises/";
+    } else if (/^\/enterprises\/\d+$/.test(path)) {
+      safePath = `/local-data/enterprises/${path.split("/")[2]}/`;
+    } else {
+      const match = path.match(/^\/fetch-(buy|sale|report)\/(\d+)$/);
+      if (match) safePath = `/local-data/fiscal/${match[2]}/${match[1]}/`;
+    }
   }
+  if (!safePath) {
+    return Promise.reject(new Error(
+      "Esta rotina não está liberada para leitura segura neste ambiente. Operações administrativas e escritas permanecem bloqueadas."
+    ));
+  }
+  const query = config.url?.includes("?") ? "?" + config.url.split("?").slice(1).join("?") : "";
+  config.url = safePath + query;
   const token = localStorage.getItem("accessToken");
   if (token) config.headers.set("Authorization", `Bearer ${token}`);
   return config;
 });
+
 export default api;
