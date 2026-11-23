@@ -25,6 +25,7 @@ def _local_only(request):
     return (
         os.environ.get("DJANGO_SETTINGS_MODULE") == "nfs.settings_demo"
         and request.get_host().split(":")[0] in ("localhost", "127.0.0.1")
+        and request.META.get("REMOTE_ADDR") in ("127.0.0.1", "::1")
     )
 
 def _read():
