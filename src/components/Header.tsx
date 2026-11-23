@@ -1,23 +1,22 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "@tanstack/react-router";
 import { LogOut, UserRoundPen } from "lucide-react";
 
 /** Sessão de autenticação pertence somente ao usuário atual. */
 export default function Header() {
-  const navigate = useNavigate();
   let user: { username?: string; first_name?: string; last_name?: string; role?: string } | null = null;
   try { user = JSON.parse(localStorage.getItem("user") || "null"); } catch { /* sessão inválida */ }
   const userLabel = [user?.first_name, user?.last_name].filter(Boolean).join(" ") || user?.username || "Usuário";
   const initials = userLabel.slice(0, 2).toUpperCase();
 
   function endSession() {
-    // Não apaga simulações fiscais locais: são independentes da autenticação.
+    // A simulação local também é descartada ao trocar de usuário para evitar
+    // exposição de metadados fiscais a outra sessão no mesmo navegador.
     // A seleção da empresa é removida para não herdar o contexto de outro usuário.
-    for (const key of ["accessToken", "refreshToken", "access", "refresh", "user", "selected_enterprise_id"]) {
+    for (const key of ["accessToken", "refreshToken", "access", "refresh", "user", "selected_enterprise_id", "fiscal-st:simulacao-v1"]) {
       localStorage.removeItem(key);
     }
-    navigate({ to: "/auth/login", replace: true });
+    window.location.replace("/auth/login");
   }
 
   return <header className="sticky top-0 z-30 w-full border-b border-[#e6ebf0] bg-white">
