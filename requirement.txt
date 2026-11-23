@@ -1,0 +1,9 @@
+django
+djangorestframework
+mysqlclient
+python-dotenv
+djangorestframework-simplejwt
+django-cryptography
+mysql-connector-python
+django-fernet-fields
+django_fernet_fields2
