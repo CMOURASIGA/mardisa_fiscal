@@ -170,3 +170,20 @@ def fiscal_data(request, enterprise_id, kind):
         return _reply(rows)
     except Exception:
         return JsonResponse({"detail": "Falha na consulta fiscal de leitura. Valide tabelas e permissões SELECT."}, status=503)
+
+@api_view(["GET"])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAdminUser])
+def metadata_list(request, kind):
+    if not _admin(request): return _disabled()
+    params = _read()
+    if not params: return _disabled()
+    queries = {
+        "users": "SELECT id, username, email, first_name, last_name, is_active FROM auth_user ORDER BY username LIMIT 2001",
+        "databases": "SELECT id, enterprise_id_id, db_name, hostname, port, username, db_type, is_created FROM api_databaseconnection ORDER BY enterprise_id_id, db_name LIMIT 2001",
+    }
+    if kind not in queries: return JsonResponse({"detail": "Consulta inválida"}, status=404)
+    try:
+        return _reply(_read_mysql(params, queries[kind]))
+    except Exception:
+        return JsonResponse({"detail": "Consulta de metadados indisponível. Verifique tabelas e acesso SELECT."}, status=503)
