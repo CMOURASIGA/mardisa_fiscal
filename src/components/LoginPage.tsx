@@ -44,8 +44,8 @@ const LoginPage = () => {
     <div className="fiscal-login min-h-screen grid lg:grid-cols-[minmax(0,1.06fr)_minmax(420px,.94fr)]">
       <aside className="fiscal-login-brand hidden lg:flex flex-col justify-between p-12 xl:p-16">
         <div className="flex items-center gap-3">
-          <img src="/logo-7c.svg" alt="7C Software" className="h-12 w-12 rounded-xl object-cover" />
-          <div><strong className="block text-lg tracking-tight">7C Software</strong><span className="text-sm opacity-70">Soluções fiscais</span></div>
+          <img src="/logo-7c.svg" alt="7C Consulting" className="h-12 w-12 rounded-xl object-cover" />
+          <div><strong className="block text-lg tracking-tight">7C Consulting</strong><span className="text-sm opacity-70">Soluções fiscais</span></div>
         </div>
         <div className="max-w-xl">
           <span className="fiscal-kicker">FISCAL ST</span>
@@ -53,13 +53,13 @@ const LoginPage = () => {
           <p className="mt-7 text-lg leading-relaxed text-slate-300">Importe notas fiscais, acompanhe compras e vendas e organize a geração de arquivos em um só ambiente.</p>
           <div className="mt-12 flex items-center gap-3 text-sm text-slate-300"><ShieldCheck size={20} className="text-orange-400" /> Acesso controlado por usuário e empresa</div>
         </div>
-        <p className="text-xs text-slate-400">Fiscal ST · 7C Software</p>
+        <p className="text-xs text-slate-400">Fiscal ST · 7C Consulting</p>
       </aside>
       <main className="flex min-h-screen items-center justify-center bg-[#f6f8fa] p-6 sm:p-10">
         <div className="w-full max-w-[430px]">
           <div className="mb-10 flex lg:hidden items-center gap-3">
-            <img src="/logo-7c.svg" alt="7C Software" className="h-12 w-12 rounded-xl object-cover" />
-            <strong>7C Software · Fiscal ST</strong>
+            <img src="/logo-7c.svg" alt="7C Consulting" className="h-12 w-12 rounded-xl object-cover" />
+            <strong>7C Consulting · Fiscal ST</strong>
           </div>
           <div className="mb-8">
             <span className="text-xs font-bold uppercase tracking-[.16em] text-[#eb5c00]">ACESSO AO SISTEMA</span>
