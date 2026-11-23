@@ -23,7 +23,7 @@ IDENTIFIER = re.compile(r"^[a-zA-Z0-9_$.-]{1,128}$")
 
 def _local_only(request):
     return (
-        settings.SETTINGS_MODULE == "nfs.settings_demo"
+        os.environ.get("DJANGO_SETTINGS_MODULE") == "nfs.settings_demo"
         and request.get_host().split(":")[0] in ("localhost", "127.0.0.1")
     )
 
